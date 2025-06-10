@@ -37,6 +37,13 @@ public class Hud {
 
     Texture arrowTexture;
 
+    // Cached textures to avoid recreating them each frame
+    private Texture whiteSquare150;
+    private Texture redSquare150;
+    private Texture redSquare75;
+
+    private final HashMap<Potion.PotionType, Texture> potionTextures = new HashMap<>();
+
     /**
      * Constructeur de l'HUD.
      * Sert à créer un objet Hud.
@@ -51,6 +58,16 @@ public class Hud {
         this.hudSize = hudSizeMult;
 
         this.arrowTexture = new Texture("assets/weapon/weapon_arrow.png");
+
+        // Pre-create textures used every frame to avoid leaking memory
+        this.whiteSquare150 = createSquareTexture(Color.WHITE, 150, 150);
+        this.redSquare150 = createSquareTexture(Color.RED, 150, 150);
+        this.redSquare75 = createSquareTexture(Color.RED, 75, 75);
+
+        potionTextures.put(Potion.PotionType.HEALTH, new Texture("assets/items/flask_big_red.png"));
+        potionTextures.put(Potion.PotionType.STAMINA, new Texture("assets/items/flask_big_yellow.png"));
+        potionTextures.put(Potion.PotionType.STRENGTH, new Texture("assets/items/flask_big_blue.png"));
+        potionTextures.put(Potion.PotionType.SPEED, new Texture("assets/items/flask_big_green.png"));
 
         //health bar textures
         this.healthBarOutside = new Texture("assets/hud/health/outside.png");
@@ -92,17 +109,15 @@ public class Hud {
 
         font.draw(batch, "Score : " + InGameScreen.score, healthBarPos.x, staminaBarPos.y);
 
-        Texture square = drawSquare(Color.WHITE, 150, 150);
-        batch.draw(square, weaponIcon1Pos.x - 33, weaponIcon1Pos.y - 55);
-        batch.draw(square, weaponIcon2Pos.x - 33, weaponIcon2Pos.y - 55);
-        batch.draw(square, weaponIcon3Pos.x - 33, weaponIcon3Pos.y - 55);
+        batch.draw(this.whiteSquare150, weaponIcon1Pos.x - 33, weaponIcon1Pos.y - 55);
+        batch.draw(this.whiteSquare150, weaponIcon2Pos.x - 33, weaponIcon2Pos.y - 55);
+        batch.draw(this.whiteSquare150, weaponIcon3Pos.x - 33, weaponIcon3Pos.y - 55);
 
         Texture defaultWeaponIcon = this.player.defaultWeapon.texture;
         batch.draw(defaultWeaponIcon, defaultWeaponIconPos.x, defaultWeaponIconPos.y, defaultWeaponIcon.getWidth() * hudSize * 1f, defaultWeaponIcon.getHeight() * hudSize * 1f);
         if (this.player.weapons.size() > 0) {
             if (this.player.indexWeapon == 0) {
-                Texture redSquare = drawSquare(Color.RED, 150, 150);
-                batch.draw(redSquare, weaponIcon1Pos.x - 33, weaponIcon1Pos.y - 55);
+                batch.draw(this.redSquare150, weaponIcon1Pos.x - 33, weaponIcon1Pos.y - 55);
             }
             Texture weaponIcon1 = this.player.weapons.get(0).texture;
             batch.draw(weaponIcon1, weaponIcon1Pos.x, weaponIcon1Pos.y, weaponIcon1.getWidth() * hudSize * 1f, weaponIcon1.getHeight() * hudSize * 1f);
@@ -111,8 +126,7 @@ public class Hud {
         }
         if (this.player.weapons.size() > 1) {
             if (this.player.indexWeapon == 1) {
-                Texture redSquare = drawSquare(Color.RED, 150, 150);
-                batch.draw(redSquare, weaponIcon2Pos.x - 33, weaponIcon2Pos.y - 55);
+                batch.draw(this.redSquare150, weaponIcon2Pos.x - 33, weaponIcon2Pos.y - 55);
             }
             Texture weaponIcon2 = this.player.weapons.get(1).texture;
             batch.draw(weaponIcon2, weaponIcon2Pos.x, weaponIcon2Pos.y, weaponIcon2.getWidth() * hudSize * 1f, weaponIcon2.getHeight() * hudSize * 1f);
@@ -121,8 +135,7 @@ public class Hud {
         }
         if (this.player.weapons.size() > 2) {
             if (this.player.indexWeapon == 2) {
-                Texture redSquare = drawSquare(Color.RED, 150, 150);
-                batch.draw(redSquare, weaponIcon3Pos.x - 33, weaponIcon3Pos.y - 55);
+                batch.draw(this.redSquare150, weaponIcon3Pos.x - 33, weaponIcon3Pos.y - 55);
             }
             Texture weaponIcon3 = this.player.weapons.get(2).texture;
             batch.draw(weaponIcon3, weaponIcon3Pos.x, weaponIcon3Pos.y, weaponIcon3.getWidth() * hudSize * 1f, weaponIcon3.getHeight() * hudSize * 1f);
@@ -141,8 +154,7 @@ public class Hud {
                 Point potionIconPos = getPointForPotion(potionType);
 
                 if (potionType == player.indexPotion) {
-                    Texture potionSquare = drawSquare(Color.RED, 75, 75);
-                    batch.draw(potionSquare, potionIconPos.x - 10, potionIconPos.y - 5);
+                    batch.draw(this.redSquare75, potionIconPos.x - 10, potionIconPos.y - 5);
                 }
 
                 batch.draw(potionTexture, potionIconPos.x, potionIconPos.y, potionTexture.getWidth() * hudSize, potionTexture.getHeight() * hudSize);
@@ -183,18 +195,7 @@ public class Hud {
     }
 
     private Texture getTextureForPotion(Potion.PotionType potionType) {
-        switch (potionType) {
-            case HEALTH:
-                return new Texture("assets/items/flask_big_red.png");
-            case STAMINA:
-                return new Texture("assets/items/flask_big_yellow.png");
-            case STRENGTH:
-                return new Texture("assets/items/flask_big_blue.png");
-            case SPEED:
-                return new Texture("assets/items/flask_big_green.png");
-            default:
-                return null;
-        }
+        return potionTextures.get(potionType);
     }
 
     private Point getPointForPotion(Potion.PotionType potionType) {
@@ -212,7 +213,7 @@ public class Hud {
         }
     }
 
-    private Texture drawSquare(Color color, int width, int height) {
+    private Texture createSquareTexture(Color color, int width, int height) {
         Pixmap pixmap = new Pixmap(width, height, Pixmap.Format.RGBA8888);
 
         pixmap.setColor(new Color(1, 1, 1, 0.5f));
@@ -226,6 +227,24 @@ public class Hud {
         pixmap.dispose();
 
         return texture;
+    }
+
+    /** Releases all textures used by the HUD. */
+    public void dispose() {
+        for (Texture t : healthBar) {
+            t.dispose();
+        }
+        for (Texture t : staminaBar) {
+            t.dispose();
+        }
+        for (Texture t : potionTextures.values()) {
+            t.dispose();
+        }
+        healthBarOutside.dispose();
+        arrowTexture.dispose();
+        whiteSquare150.dispose();
+        redSquare150.dispose();
+        redSquare75.dispose();
     }
 
     private int getStaminaAmount() {

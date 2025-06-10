@@ -454,13 +454,14 @@ public class InGameScreen implements Screen {
 	}
 
 	@Override
-	public void dispose() {
-		this.game.dispose();
-		this.map.dispose();
-		for (Texture texture : countdownTextures) {
-			texture.dispose();
-		}
-	}
+        public void dispose() {
+                this.hud.dispose();
+                this.game.dispose();
+                this.map.dispose();
+                for (Texture texture : countdownTextures) {
+                        texture.dispose();
+                }
+        }
 	private String loadUsername() {
 		if (GetCoreProperties.getStringProperty("USERNAME") == null || GetCoreProperties.getStringProperty("USERNAME").isEmpty()) {
 			return "guest";

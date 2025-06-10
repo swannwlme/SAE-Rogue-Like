@@ -111,14 +111,15 @@ public class InGameScreen implements Screen {
 	/**
 	 * Passe au niveau suivant.
 	 */
-	public void nextLevel(){
-		InGameScreen.stateTime=0f;
-		System.out.println("next level");
-		this.currentLevel+=1;
+        public void nextLevel(){
+                InGameScreen.stateTime=0f;
+                System.out.println("next level");
+                this.currentLevel+=1;
 
-		this.map = new Map(this.map_width, this.map_height);
-		this.player.hasPlayerSpawn=false;
-		this.player.setPos(map.getPlayerSpawn());
+                this.map.dispose();
+                this.map = new Map(this.map_width, this.map_height);
+                this.player.hasPlayerSpawn=false;
+                this.player.setPos(map.getPlayerSpawn());
 
 		startTime = TimeUtils.millis();
 
@@ -251,9 +252,12 @@ public class InGameScreen implements Screen {
 	/**
 	 * Libère les ressources utilisées par l'écran de jeu.
 	 */
-	@Override
-	public void dispose() {
-		this.game.dispose();
-		this.map.dispose();
-	}
+        @Override
+        public void dispose() {
+                this.game.dispose();
+                this.map.dispose();
+                if (this.hud != null){
+                        this.hud.dispose();
+                }
+        }
 }

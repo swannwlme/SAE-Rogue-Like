@@ -206,10 +206,11 @@ public class Map {
         for (Monster m : Map.monsters){
             if (!m.isDead){
                 tmp.add(m);
+            } else {
+                m.dispose();
             }
         }
 
-        Map.monsters.clear();
         Map.monsters = tmp;
     }
 
@@ -419,6 +420,7 @@ public class Map {
 
         for (OnGroundMeleeWeapon weapon : toRemove){
             Map.onGroundMeleeWeapons.remove(weapon);
+            weapon.dispose();
         }
     }
 
@@ -458,6 +460,24 @@ public class Map {
     public void dispose(){
         for (Floor f : this.floors){
             f.texture.dispose();
+        }
+        for (Wall w : this.walls){
+            w.dispose();
+        }
+        for (Monster m : Map.monsters){
+            m.dispose();
+        }
+        Map.monsters.clear();
+        for (Chest c : this.chests){
+            c.dispose();
+        }
+        this.chests.clear();
+        for (OnGroundMeleeWeapon weapon : Map.onGroundMeleeWeapons){
+            weapon.dispose();
+        }
+        Map.onGroundMeleeWeapons.clear();
+        if (this.stairs != null){
+            this.stairs.dispose();
         }
     }
 }

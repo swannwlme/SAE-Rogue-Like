@@ -32,4 +32,11 @@ public class Wall {
     public void draw(SpriteBatch batch){
         batch.draw(this.texture, this.pos.x*Floor.TEXTURE_WIDTH, this.pos.y*Floor.TEXTURE_HEIGHT);
     }
+
+    /**
+     * Libère la texture utilisée par le mur.
+     */
+    public void dispose(){
+        this.texture.dispose();
+    }
 }

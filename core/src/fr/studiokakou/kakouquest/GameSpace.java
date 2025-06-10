@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.TimeUtils;
 import fr.studiokakou.kakouquest.keybinds.Keybinds;
 import fr.studiokakou.kakouquest.screens.SplashScreen;
+import fr.studiokakou.kakouquest.screens.InGameScreen;
 
 /**
  * La classe GameSpace représente l'application principale du jeu.

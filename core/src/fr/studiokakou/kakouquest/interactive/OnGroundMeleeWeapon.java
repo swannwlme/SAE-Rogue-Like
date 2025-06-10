@@ -120,4 +120,12 @@ public class OnGroundMeleeWeapon {
         batch.draw(this.meleeWeapon.texture, this.pos.x, this.pos.y);
     }
 
+    /**
+     * Libère les textures associées.
+     */
+    public void dispose(){
+        this.interactKeyAnimation.getKeyFrame(0).getTexture().dispose();
+        this.meleeWeapon.dispose();
+    }
+
 }

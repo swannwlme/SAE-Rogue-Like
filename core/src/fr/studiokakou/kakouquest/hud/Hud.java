@@ -123,4 +123,17 @@ public class Hud {
         }
         return healthAmount;
     }
+
+    /**
+     * Libère les textures du HUD.
+     */
+    public void dispose(){
+        this.healthBarOutside.dispose();
+        for (Texture t : this.healthBar){
+            t.dispose();
+        }
+        for (Texture t : this.staminaBar){
+            t.dispose();
+        }
+    }
 }

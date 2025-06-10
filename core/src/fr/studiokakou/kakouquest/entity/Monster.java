@@ -52,8 +52,8 @@ public class Monster {
     boolean isRunning=false;
     boolean isFlip=Utils.randint(0, 1)==0;
     public Sprite sprite;
-
-    LocalDateTime currentAttackTime; // The current attack time of the monster
+    boolean isDying = false;
+    public boolean isDead = false;
 
     /** Number of columns in the animation sprite sheet. */
     public static int FRAME_COLS = 1;
@@ -61,13 +61,13 @@ public class Monster {
     public static int FRAME_ROWS = 4;
 
     //hit vars
-    public ArrayList<String> player_hitted = new ArrayList<>();
+    public ArrayList<String> playerHitted = new ArrayList<>();
     boolean isRed;
     LocalDateTime hitStart=null;
     Animation<TextureRegion> bloodEffect;
     float bloodStateTime=0f;
 
-    public static Dictionary<Integer, ArrayList<Monster>> possibleMonsters = new Hashtable<>(); // The possible monsters that can be created
+    public static Hashtable<Integer, ArrayList<Monster>> possibleMonsters = new Hashtable<>(); // The possible monsters that can be created
 
 
     /**
@@ -316,6 +316,15 @@ public class Monster {
      * @param currentLevel The current level.
      */
     public static void createPossibleMonsters(int currentLevel){
+        if (possibleMonsters != null){
+            for (ArrayList<Monster> list : possibleMonsters.values()){
+                if (list != null){
+                    for (Monster m : list){
+                        m.dispose();
+                    }
+                }
+            }
+        }
         possibleMonsters = new Hashtable<>();
         possibleMonsters.put(1, new ArrayList<>());
         possibleMonsters.put(2, new ArrayList<>());
@@ -386,5 +395,14 @@ public class Monster {
     }
     static Monster WOGOL(int currentLevel){
         return new Monster("Wogol", "assets/entities/wogol_idle.png", "assets/entities/wogol_run.png", 200, 20, 600, 50f, 150, currentLevel);
+    }
+
+    /**
+     * Dispose les textures utilisées par le monstre.
+     */
+    public void dispose(){
+        this.idleAnimation.getKeyFrame(0).getTexture().dispose();
+        this.runAnimation.getKeyFrame(0).getTexture().dispose();
+        this.bloodEffect.getKeyFrame(0).getTexture().dispose();
     }
 }

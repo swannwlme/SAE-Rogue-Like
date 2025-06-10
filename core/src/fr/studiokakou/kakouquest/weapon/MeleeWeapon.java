@@ -70,9 +70,16 @@ public class MeleeWeapon {
 	 * Returns a new MeleeWeapon with the same parameters as this MeleeWeapon.
 	 * @return A new MeleeWeapon.
 	 */
-	public MeleeWeapon getNew(){
-		return new MeleeWeapon(this.name, this.texturePath, damage, maxResistance, attackRange, attackSpeed, size);
-	}
+        public MeleeWeapon getNew(){
+                return new MeleeWeapon(this.name, this.texturePath, damage, maxResistance, attackRange, attackSpeed, size);
+        }
+
+        /**
+         * Libère la texture associée à l'arme.
+         */
+        public void dispose(){
+                this.texture.dispose();
+        }
 
 	/**
 	 * Creates the possible MeleeWeapons and adds them to the possibleMeleeWeapon dictionary.

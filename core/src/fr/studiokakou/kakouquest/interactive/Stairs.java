@@ -94,4 +94,12 @@ public class Stairs {
 
         batch.draw(this.texture, this.pos.x, this.pos.y);
     }
+
+    /**
+     * Libère les ressources liées aux escaliers.
+     */
+    public void dispose(){
+        this.texture.dispose();
+        this.interactKeyAnimation.getKeyFrame(0).getTexture().dispose();
+    }
 }

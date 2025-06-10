@@ -182,4 +182,13 @@ public class Chest {
             batch.draw(this.opened, this.pos.x, this.pos.y);
         }
     }
+
+    /**
+     * Libère les textures utilisées par le coffre.
+     */
+    public void dispose(){
+        this.closed.getTexture().dispose();
+        this.opened.getTexture().dispose();
+        this.interactKeyAnimation.getKeyFrame(0).getTexture().dispose();
+    }
 }

@@ -10,6 +10,7 @@ import fr.studiokakou.kakouquest.player.Player;
 import fr.studiokakou.kakouquest.screens.InGameScreen;
 import fr.studiokakou.kakouquest.screens.PauseScreen;
 import fr.studiokakou.kakouquest.screens.SplashScreen;
+import fr.studiokakou.kakouquest.utils.Utils;
 
 /**
  * La classe GameSpace représente l'application principale du jeu.
@@ -79,11 +80,12 @@ public class GameSpace extends Game {
 	/**
 	 * Méthode appelée lors de la fermeture de l'application pour libérer les ressources.
 	 */
-	@Override
-	public void dispose() {
-		batch.dispose();
-		hudBatch.dispose();
-	}
+        @Override
+        public void dispose() {
+                batch.dispose();
+                hudBatch.dispose();
+                Utils.disposeTextures();
+        }
 
 	/**
 	 * Méthode appelée lors du redimensionnement de la fenêtre de l'application.

@@ -10,6 +10,8 @@ import com.badlogic.gdx.math.Vector3;
 import fr.studiokakou.kakouquest.map.Point;
 import fr.studiokakou.kakouquest.screens.InGameScreen;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 /**
@@ -19,6 +21,17 @@ import java.util.Random;
  * @version 1.0
  */
 public class Utils {
+    /** Cache de textures partagées afin d'éviter les chargements répétitifs. */
+    private static final Map<String, Texture> textureCache = new HashMap<>();
+
+    /**
+     * Récupère une texture depuis le cache ou la charge si nécessaire.
+     * @param textureName chemin de la texture
+     * @return texture associée
+     */
+    private static Texture getTexture(String textureName) {
+        return textureCache.computeIfAbsent(textureName, Texture::new);
+    }
     /**
      * Récupère une animation à partir d'une sprite sheet.
      *
@@ -28,7 +41,7 @@ public class Utils {
      * @return L'animation générée
      */
     public static Animation<TextureRegion> getAnimation(String textureName, int FRAME_COLS, int FRAME_ROWS){
-        Texture texture = new Texture(textureName);
+        Texture texture = getTexture(textureName);
 
         TextureRegion[][] tmp = TextureRegion.split(texture,
                 texture.getWidth() / FRAME_COLS,
@@ -56,7 +69,7 @@ public class Utils {
      * @return L'animation générée
      */
     public static Animation<TextureRegion> getAnimation(String textureName, int FRAME_COLS, int FRAME_ROWS, float frame_duration){
-        Texture texture = new Texture(textureName);
+        Texture texture = getTexture(textureName);
 
         TextureRegion[][] tmp = TextureRegion.split(texture,
                 texture.getWidth() / FRAME_COLS,
@@ -84,7 +97,7 @@ public class Utils {
      * @return L'animation générée
      */
     public static Animation<TextureRegion> getAnimationHorizontal(String textureName, int FRAME_COLS, int FRAME_ROWS, float frame_duration){
-        Texture texture = new Texture(textureName);
+        Texture texture = getTexture(textureName);
 
         TextureRegion[][] tmp = TextureRegion.split(texture,
                 texture.getWidth() / FRAME_COLS,
@@ -111,7 +124,7 @@ public class Utils {
      * @return L'animation inversée générée
      */
     public static Animation<TextureRegion> getAnimationRevert(String textureName, int FRAME_COLS, int FRAME_ROWS){
-        Texture texture = new Texture(textureName);
+        Texture texture = getTexture(textureName);
 
         TextureRegion[][] tmp = TextureRegion.split(texture,
                 texture.getWidth() / FRAME_COLS,
@@ -170,7 +183,7 @@ public class Utils {
      * @param batch    Le SpriteBatch utilisé pour le rendu
      */
     public static void markPoint(Point position, SpriteBatch batch){
-        batch.draw(new Texture("assets/mark.png"), position.x, position.y);
+        batch.draw(getTexture("assets/mark.png"), position.x, position.y);
     }
 
     /**
@@ -180,10 +193,21 @@ public class Utils {
      * @param batch    Le SpriteBatch utilisé pour le rendu
      */
     public static void bigMarkPoint(Point position, SpriteBatch batch){
-        batch.draw(new Texture("assets/mark.png"), position.x, position.y);
-        batch.draw(new Texture("assets/mark.png"), position.x+1, position.y);
-        batch.draw(new Texture("assets/mark.png"), position.x, position.y+1);
-        batch.draw(new Texture("assets/mark.png"), position.x+1, position.y+1);
+        Texture mark = getTexture("assets/mark.png");
+        batch.draw(mark, position.x, position.y);
+        batch.draw(mark, position.x+1, position.y);
+        batch.draw(mark, position.x, position.y+1);
+        batch.draw(mark, position.x+1, position.y+1);
+    }
+
+    /**
+     * Libère toutes les textures mises en cache.
+     */
+    public static void disposeTextures() {
+        for (Texture texture : textureCache.values()) {
+            texture.dispose();
+        }
+        textureCache.clear();
     }
 
     /**

@@ -41,6 +41,7 @@ public class InGameScreen implements Screen {
 	Camera cam;
 	Hud hud;
 	BitmapFont font;
+	private ShapeRenderer shapeRenderer;
 
 	public static int currentLevel;
 	public static int deepestLevel;
@@ -84,6 +85,7 @@ public class InGameScreen implements Screen {
 		this.batch = game.batch;
 		this.hudBatch = game.hudBatch;
 		this.upgradeBatch = game.upgradeBatch;
+		this.shapeRenderer = new ShapeRenderer();
 
 		currentLevel = 1;
 		deepestLevel = 1;
@@ -117,6 +119,7 @@ public class InGameScreen implements Screen {
 		this.batch = game.batch;
 		this.hudBatch = game.hudBatch;
 		this.upgradeBatch = game.upgradeBatch;
+		this.shapeRenderer = new ShapeRenderer();
 
 		InGameScreen.currentLevel = currentLevel;
 		InGameScreen.deepestLevel = deepestLevel;
@@ -313,7 +316,6 @@ public class InGameScreen implements Screen {
 			this.hud.draw(hudBatch);
 			hudBatch.end();
 
-			ShapeRenderer shapeRenderer = new ShapeRenderer();
 			this.hud.drawXpBar(shapeRenderer);
 		}
 
@@ -454,14 +456,18 @@ public class InGameScreen implements Screen {
 	}
 
 	@Override
-        public void dispose() {
-                this.hud.dispose();
-                this.game.dispose();
-                this.map.dispose();
-                for (Texture texture : countdownTextures) {
-                        texture.dispose();
-                }
-        }
+	public void dispose() {
+		this.hud.dispose();
+		this.game.dispose();
+		this.map.dispose();
+		UpgradeCardScreen.dispose();
+		if (shapeRenderer != null) {
+			shapeRenderer.dispose();
+		}
+		for (Texture texture : countdownTextures) {
+			texture.dispose();
+		}
+	}
 	private String loadUsername() {
 		if (GetCoreProperties.getStringProperty("USERNAME") == null || GetCoreProperties.getStringProperty("USERNAME").isEmpty()) {
 			return "guest";

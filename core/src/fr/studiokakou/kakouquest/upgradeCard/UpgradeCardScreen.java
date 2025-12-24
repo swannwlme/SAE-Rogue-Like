@@ -14,6 +14,7 @@ public class UpgradeCardScreen {
     static ArrayList<UpgradeCard> upgradeCards = new ArrayList<>();
     static ArrayList<UpgradeCard> possibleCards = new ArrayList<>();
     public static LocalDateTime appearTime;
+    private static boolean initialized = false;
 
     /**
      * Méthode pour lancer l'écran d'upgrade.
@@ -62,6 +63,9 @@ public class UpgradeCardScreen {
     }
 
     public static void initUpgradeCards() {
+        if (initialized) {
+            return;
+        }
         possibleCards.add(new UpgradeCard(new Texture("assets/upgrade_cards/health_card.png"), "hp", 10));
         possibleCards.add(new UpgradeCard(new Texture("assets/upgrade_cards/speed_card.png"), "speed", 4));
         possibleCards.add(new UpgradeCard(new Texture("assets/upgrade_cards/strength_card.png"), "strength", 1));
@@ -71,5 +75,13 @@ public class UpgradeCardScreen {
         possibleCards.add(new UpgradeCard(new Texture("assets/upgrade_cards/lucky_one_card.png"), "lucky_one", 0));
         possibleCards.add(new UpgradeCard(new Texture("assets/upgrade_cards/radiant_card.png"), "radiant", 0));
         possibleCards.add(new UpgradeCard(new Texture("assets/upgrade_cards/xp_upgrade.png"), "xp", 0));
+        initialized = true;
+    }
+
+    public static void dispose() {
+        possibleCards.forEach(card -> card.texture.dispose());
+        possibleCards.clear();
+        upgradeCards.clear();
+        initialized = false;
     }
 }
